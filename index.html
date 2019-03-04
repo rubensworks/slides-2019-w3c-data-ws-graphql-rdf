@@ -33,27 +33,115 @@
     </header>
 
     <section id="title" class="slide title">
-      <h2>Bridges between GraphQL and RDF</h2>
-      <!-- Platform om gedecentralizeerde Web applicaties te bouwen. -->
+      <h2>Bridges between<br />GraphQL and RDF</h2>
       <ul class="author inline">
           <li class="current"><a href="https://www.rubensworks.net/">Ruben Taelman</a></li>
       </ul>
       <p class="affiliation"><a href="http://idlab.technology/">Ghent University – imec – IDLab, Belgium</a></p>
     </section>
     
-    <section id="index" class="slide index">
-      <ul>
-        <li><a href="#index-why">Waarom Solid?</a></li>
-        <li><a href="#index-how">Hoe werkt Solid?</a></li>
-        <li><a href="#index-what">Wat is mogelijk met Solid?</a></li>
-      </ul>
+    <section id="intro-graphql" class="slide">
+      <h2>Finding a <em>human</em> by <em>id</em> with GraphQL</h2>
+      <p>
+          <h4 style="margin: 0">GraphQL Query:</h4>
+          <pre style="background-color: white; margin: 0">
+{
+  human(id: "1000") {
+    name
+    height
+  }
+}
+          </pre>
+          <h4 style="margin: 0">JSON results:</h4>
+          <pre style="background-color: white; margin: 0">
+{
+  "data": {
+    "human": {
+      "name": "Luke Skywalker",
+      "height": 1.72
+    }
+  }
+}
+          </pre>
+      </p>
     </section>
     
-    <section id="index-why" class="slide index">
+    <section id="intro-sparql" class="slide">
+      <h2>Finding a <em>human</em> by <em>URI</em> with SPARQL</h2>
+      <p>
+          <h4 style="margin: 0">GraphQL Query:</h4>
+          <pre style="background-color: white; margin: 0">
+SELECT ?name ?height WHERE {
+  &lt;http//example.org/human/1000&gt; a schema:Person;
+                                   schema:name ?name;
+                                   schema:height ?height.
+}
+          </pre>
+          <h4 style="margin: 0">JSON results:</h4>
+          <pre style="background-color: white; margin: 0; font-size: small;">
+{
+  "head": {
+    "vars": [ "name" , "height" ]
+  },
+  "results": {
+    "bindings": [
+      {
+        "name": { "type": "literal" , "value": "Luke Skywalker" },
+        "height": { "type": "literal" , "value": "1.72", "datatype": "http://www.w3.org/2001/XMLSchema#double" },
+      }
+    ]
+  }
+}
+          </pre>
+      </p>
+    </section>
+    
+    <section id="graphql-vs-graphql" class="slide">
+      <h2>GraphQL vs SPARQL</h2>
+      <table>
+          <tr>
+              <th></th>
+              <th>GraphQL</th>
+              <th>SPARQL</th>
+          </tr>
+          <tr>
+              <td><strong>Low developer effort</strong></td>
+              <td>✓</td>
+              <td></td>
+          </tr>
+          <tr>
+              <td><strong>Wide availability of professional development tools</strong></td>
+              <td>✓</td>
+              <td></td>
+          </tr>
+          <tr>
+              <td><strong>High expressivity</strong></td>
+              <td></td>
+              <td>✓</td>
+          </tr>
+          <tr>
+              <td><strong>Reusability of queries across datasets</strong></td>
+              <td></td>
+              <td>✓</td>
+          </tr>
+      </table>
+    </section>
+    
+    <section id="intro-graphql" class="slide">
+      <h2>Using GraphQL to query RDF:<br />getting the best of two worlds</h2>
       <ul>
-        <li class="current"><a href="#index-why">Waarom Solid?</a></li>
-        <li><a href="#index-how">Hoe werkt Solid?</a></li>
-        <li><a href="#index-what">Wat is mogelijk met Solid?</a></li>
+          <li>
+              <a href="https://comunica.github.io/Article-ISWC2018-Demo-GraphQlLD/"><strong>GraphQL-LD</strong></a>: JSON-LD-based conversion to SPARQL.
+          </li>
+          <li>
+              <a href="http://hypergraphql.org/"><strong>HyperGraphQL</strong></a>: GraphQL interface wrapper around RDF sources.
+          </li>
+          <li>
+              <a href="https://www.topquadrant.com/products/topbraid-enterprise-data-governance/"><strong>TopBraid</strong></a>: Graph store with GraphQL interface based on SHACL.
+          </li>
+          <li>
+              <a href="https://www.stardog.com/"><strong>Stardog</strong></a>: SPARQL engine that also accepts GraphQL (converted to SPARQL).
+          </li>
       </ul>
     </section>
     
