@@ -35,9 +35,9 @@
     <section id="title" class="slide title">
       <h2>Bridges between<br />GraphQL and RDF</h2>
       <ul class="author inline">
-          <li class="current"><a href="https://www.rubensworks.net/">Ruben Taelman</a></li>
+          <li class="current"><a href="https://www.rubensworks.net/">Ruben Taelman</a> — <a href="https://twitter.com/rubensworks">@rubensworks</a></li>
       </ul>
-      <p class="affiliation"><a href="http://idlab.technology/">Ghent University – imec – IDLab, Belgium</a></p>
+      <p class="affiliation"><a href="http://idlab.technology/">Ghent University — imec — IDLab, Belgium</a></p>
     </section>
     
     <section id="intro-graphql" class="slide">
@@ -71,6 +71,7 @@
       <p>
           <h4 style="margin: 0">GraphQL Query:</h4>
           <pre style="background-color: white; margin: 0">
+@prefix schema: &lt;https://schema.org/&gt;.
 SELECT ?name ?height WHERE {
   &lt;http//example.org/human/1000&gt; a schema:Person;
                                    schema:name ?name;
@@ -127,42 +128,96 @@ SELECT ?name ?height WHERE {
       </table>
     </section>
     
-    <section id="intro-graphql" class="slide">
-      <h2>Using GraphQL to query RDF:<br />getting the best of two worlds</h2>
+    <section id="graphq-to-rdf-approaches" class="slide">
+      <h2>Using GraphQL to query RDF:<br />different approaches exist</h2>
       <ul>
           <li>
-              <a href="https://comunica.github.io/Article-ISWC2018-Demo-GraphQlLD/"><strong>GraphQL-LD</strong></a>: JSON-LD-based conversion to SPARQL.
+              <a href="https://comunica.github.io/Article-ISWC2018-Demo-GraphQlLD/"><strong>GraphQL-LD</strong></a>: Conversion to SPARQL based on a <strong>JSON-LD context</strong>,<br />independent of any engine and works for <strong>any RDF source</strong>.
           </li>
           <li>
-              <a href="http://hypergraphql.org/"><strong>HyperGraphQL</strong></a>: GraphQL interface wrapper around RDF sources.
+              <a href="https://www.stardog.com/"><strong>Stardog</strong></a>: SPARQL engine that also accepts GraphQL (converted to SPARQL). Conversion is done using a <strong>GraphQL schema</strong>, or <code>@prefix</code> <strong>directives</strong>.
           </li>
           <li>
-              <a href="https://www.topquadrant.com/products/topbraid-enterprise-data-governance/"><strong>TopBraid</strong></a>: Graph store with GraphQL interface based on SHACL.
+              <a href="http://hypergraphql.org/"><strong>HyperGraphQL</strong></a>: GraphQL interface wrapper around RDF sources using a <strong>configuration file</strong> and an <strong>annotated GraphQL schema</strong>.
           </li>
           <li>
-              <a href="https://www.stardog.com/"><strong>Stardog</strong></a>: SPARQL engine that also accepts GraphQL (converted to SPARQL).
+              <a href="https://www.topquadrant.com/products/topbraid-enterprise-data-governance/"><strong>TopBraid</strong></a>: Graph store with GraphQL interface. GraphQL schemas can be generated using shape definitions (SHACL).
           </li>
       </ul>
     </section>
     
-    TODO: GraphQL-LD in detail
+    <section id="incompatible" class="slide">
+      <h2>These approaches are incompatible</h2>
+      <div style="width: 30%; float: left">
+          <h4 style="margin: 0">GraphQL-LD:</h4>
+          <pre style="background-color: white; margin: 0">
+{
+  human {
+    name
+    height
+  }
+}
+          </pre>
+          <h4 style="margin: 0">Stardog:</h4>
+          <pre style="background-color: white; margin: 0">
+{
+  Human {
+    name
+    height
+  }
+}
+          </pre>
+      </div>
+      <div style="width: 65%; float: right">
+          <h4 style="margin: 0">&nbsp;</h4>
+          <pre style="background-color: white; margin: 0">
+SELECT ?name ?height WHERE {
+  _:b1 ex:human _:human.
+  _:human ex:name ?name;
+          ex:height ?height.
+}
+          </pre>
+          <br />
+          <h4 style="margin: 0">&nbsp;</h4>
+          <pre style="background-color: white; margin: 0">
+SELECT ?name ?height WHERE {
+  _:b1 a ex:Human;
+       ex:name ?name;
+       ex:height ?height.
+}
+          </pre>
+      </div>
+    </section>
+    
+    <section id="incompatible-more" class="slide">
+      <h2>More differences</h2>
+      <ul>
+          <li>Aggregates <em>(sum, count, ...)</em></li>
+          <li>Filtering <em>(directives, custom fields, ...)</em></li>
+          <li>Optional fields</li>
+          <li>Named graphs</li>
+          <li>Ordering</li>
+          <li>Pagination</li>
+          <li>...</li>
+      </ul>
+    </section>
     
     <section id="conclusion" class="slide">
-      <h2>A standard way of querying RDF with GraphQL is needed</h2>
-      <p><h4>Plan of action:</h4></p>
+      <h2>A standard way of querying<br />RDF with GraphQL is needed</h2>
+      <p><h4>Proposal for a plan of action:</h4></p>
       <ol>
           <li>
-              Determine the different aspects of querying RDF with GraphQL. <br />
+              <strong>Analyze</strong> the different aspects of querying RDF with GraphQL. <br />
               <em>(Property paths, joins, ordering, aggregation, ...)</em>
           </li>
           <li>
-              Categorize the existing approaches over these aspects.
+              <strong>Categorize</strong> the existing approaches over these aspects.
           </li>
           <li>
-              Determine the advantages and disadvantages of each aspect approach.
+              <strong>Compare</strong> the advantages and disadvantages of each aspect approach.
           </li>
           <li>
-              Propose a standard approach and semantics for querying RDF with GraphQL.
+              <strong>Propose a standard</strong> approach and semantics for querying RDF with GraphQL.
           </li>
       </ol>
     </section>
